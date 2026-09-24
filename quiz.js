@@ -348,6 +348,11 @@
 
   /* 2. TABLET ONLY (Width: 768px - 991px | Heights 600px up to 765px) */
   @media screen and (min-width: 768px) and (max-width: 991px) and (min-height: 600px) and (max-height: 765px) {
+    .hs_quiz_intro_content-wrap {
+      max-height: 250px !important;
+      overflow: auto !important;
+    }
+
     .hs_quiz_persona_tab-info {
       max-height: 180px !important;
       overflow: auto !important;
@@ -372,6 +377,46 @@
     }*/
     .hs_quiz_outcome_accordion {
       max-height: 188px;
+    }
+  }
+
+  /* 2.1 TABLET ONLY (Width: 768px - 991px | Heights 526px up to 599px) */
+  @media screen and (min-width: 768px) and (max-width: 991px) and (min-height: 526px) and (max-height: 599px) {
+    .hs_quiz_intro_content-wrap {
+      max-height: 175px !important;
+      overflow: auto !important;
+    }
+
+    .hs_quiz_persona_tab-info {
+      max-height: 65px !important;
+      overflow: auto !important;
+    }
+
+    .hs_quiz_assessment_text.is-q {
+      flex-shrink: 0 !important;
+    }
+
+    .hs_quiz_assessment_text {
+      font-size: 14px !important;
+      max-height: 36px;
+      overflow: auto;
+    }
+    .hs_quiz_assessment_text.is-q {
+      font-size: 14px !important;
+      max-height: none;
+    }
+
+    .hs_quiz_assessment_q-main {
+      max-height: 90px !important;
+      overflow: auto !important;
+    }
+
+    /*.hs_quiz_outcome_info {
+      overflow: auto !important;
+      max-height: 140px !important;
+    }*/
+    .hs_quiz_outcome_accordion {
+      max-height: 80px;
     }
   }
 
@@ -2572,6 +2617,7 @@ strong {
 .hs_quiz_nav {
   color: #fff;
   background-color: #172349;
+  flex: 1;
   width: 100%;
   padding: 16px;
 }
@@ -3394,7 +3440,7 @@ strong {
   color: #fff;
   text-align: center;
   cursor: pointer;
-  border: .75px solid #ffffff4d;
+  border: 2px solid #ffffff4d;
   border-radius: 5px;
   flex-flow: column;
   justify-content: center;
@@ -3408,7 +3454,7 @@ strong {
 }
 
 .hs_quiz_button-white:hover {
-  border-color: #ffffffa3;
+  border-color: #fff;
 }
 
 .hs_quiz_nav_cta-wrap {
@@ -3651,9 +3697,9 @@ strong {
 
     var restoreListeners = patchReadyListeners();
 
-   var externalScripts = [
-  "https://cdn.statically.io/gh/hlabsdev1/bayer-quiz@main/jquery.js",
-  "https://cdn.statically.io/gh/hlabsdev1/bayer-quiz@main/webflow.js"
+    var externalScripts = [
+  "https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6a9a9a6d2876b5a5a344308c",
+  "https://cdn.prod.website-files.com/6a9a9a6d2876b5a5a344308c/js/webflow.7fdf50bc.e09d923bc231ffd4.js"
 ];
 
     var inlineScripts = [
@@ -3691,25 +3737,22 @@ strong {
     init() {
       this.injectCSS();
       this.bindEvents();
-      sessionStorage.removeItem('hsQuizHistory');
+      sessionStorage.removeItem('hsQuizHistory'); // [VEV FIX]: Force the main tag to expand and remove padding
 
-      // [VEV FIX]: Force the main tag to expand and remove padding
       const mainTag = document.querySelector('main');
       if (mainTag) {
         mainTag.style.maxWidth = 'none';
         mainTag.style.paddingLeft = '0';
         mainTag.style.paddingRight = '0';
-      }
+      } // Hide Assessment CTAs and Reset buttons on initial load
 
-      // Hide Assessment CTAs and Reset buttons on initial load
       document.querySelectorAll('[data-hs-element="assessment-cta"]').forEach((cta) => {
         cta.style.display = 'none';
       });
       document.querySelectorAll('[data-hs-action="reset"]').forEach((btn) => {
         btn.style.display = 'none';
-      });
+      }); // Instantly show the intro background without any fading on load
 
-      // Instantly show the intro background without any fading on load
       const introBg = document.querySelector('[data-hs-bg="intro"]');
       if (introBg) {
         introBg.style.display = 'block';
@@ -3722,10 +3765,10 @@ strong {
       const style = document.createElement('style');
       style.id = 'hs-quiz-styles';
       style.innerHTML = \`
-      [data-hs-bg] {
-        transition: opacity 0.4s ease;
-      }
-    \`;
+Â  Â  Â  [data-hs-bg] {
+Â  Â  Â  Â  transition: opacity 0.4s ease;
+Â  Â  Â  }
+Â  Â  \`;
       document.head.appendChild(style);
     },
 
@@ -3873,9 +3916,8 @@ strong {
       } else {
         if (correctMsg) correctMsg.style.display = 'none';
         if (wrongMsg) wrongMsg.style.display = 'flex';
-      }
+      } // If this is the final question, update the Next button text
 
-      // If this is the final question, update the Next button text
       if (this.state.currentStep === this.state.totalSteps) {
         const nextBtns = questionSet.querySelectorAll('[data-hs-action="next-question"]');
         nextBtns.forEach((btn) => {
@@ -3930,12 +3972,11 @@ strong {
       if (specificOutcome) specificOutcome.style.display = 'block';
 
       this.updateBackground(\`\${this.state.persona}-\${outcomeType}\`);
-    },
-
-    /**
+    } /**
      * Resilient Tab Switcher
      * Polls the DOM layout tree to ensure Webflow Tabs are safely clickable after routing.
-     */
+     */,
+
     clickWebflowTab(persona, attempt = 1) {
       if (!persona) return;
 
@@ -3943,38 +3984,31 @@ strong {
       const allRegisteredTabs = Array.from(document.querySelectorAll('[data-hs-tab-link]')).map((el) => ({
         attrValue: el.getAttribute('data-hs-tab-link'),
         element: el,
-      }));
+      })); // 1. Attempt exact attribute match
 
-      // 1. Attempt exact attribute match
-      let marker = document.querySelector(\`[data-hs-tab-link="\${cleanPersona}"]\`);
+      let marker = document.querySelector(\`[data-hs-tab-link="\${cleanPersona}"]\`); // 2. Case-insensitive fallback
 
-      // 2. Case-insensitive fallback
       if (!marker) {
         marker = allRegisteredTabs.find((t) => (t.attrValue || '').trim().toLowerCase() === cleanPersona.toLowerCase())?.element;
-      }
+      } // 3. Last-resort fallback to first available tab
 
-      // 3. Last-resort fallback to first available tab
       if (!marker && allRegisteredTabs.length > 0) {
         marker = allRegisteredTabs[0].element;
       }
 
-      if (!marker) return;
+      if (!marker) return; // 4. Resolve the actual Webflow clickable tab link (.w-tab-link)
 
-      // 4. Resolve the actual Webflow clickable tab link (.w-tab-link)
-      const tabLink = marker.classList.contains('w-tab-link') ? marker : marker.closest('.w-tab-link') || marker.querySelector('.w-tab-link') || marker;
+      const tabLink = marker.classList.contains('w-tab-link') ? marker : marker.closest('.w-tab-link') || marker.querySelector('.w-tab-link') || marker; // 5. Visibility Polling (Crucial for Vev Embeds)
 
-      // 5. Visibility Polling (Crucial for Vev Embeds)
-      const isVisibleInLayout = tabLink.offsetParent !== null;
+      const isVisibleInLayout = tabLink.offsetParent !== null; // Wait and retry (up to 5 frames / 300ms) until the browser layout paints the element
 
-      // Wait and retry (up to 5 frames / 300ms) until the browser layout paints the element
       if (!isVisibleInLayout && attempt < 5) {
         setTimeout(() => {
           this.clickWebflowTab(persona, attempt + 1);
         }, 60);
         return;
-      }
+      } // 6. Execute Native & jQuery Clicks
 
-      // 6. Execute Native & jQuery Clicks
       tabLink.click();
 
       if (window.jQuery) {
@@ -3994,9 +4028,8 @@ strong {
         const startBtn = e.target.closest('[data-hs-action="start-playing"]');
         if (startBtn) {
           e.preventDefault();
-          const persona = startBtn.getAttribute('data-hs-persona');
+          const persona = startBtn.getAttribute('data-hs-persona'); // OUTCOME ROUTING: Return to persona view and trigger tab logic
 
-          // OUTCOME ROUTING: Return to persona view and trigger tab logic
           if (startBtn.closest('[data-hs-view="outcome"]')) {
             this.setView('persona');
 
@@ -4007,9 +4040,8 @@ strong {
               }, 50);
             }
             return;
-          }
+          } // NORMAL START ROUTING: Start the quiz
 
-          // NORMAL START ROUTING: Start the quiz
           this.state.history = [];
           sessionStorage.removeItem('hsQuizHistory');
           document.querySelectorAll('.hs_quiz_assessment_set.is-answered').forEach((el) => {
@@ -4033,26 +4065,23 @@ strong {
 
         const resetBtn = e.target.closest('[data-hs-action="reset"], [data-reset]');
         if (resetBtn) {
-          e.preventDefault();
+          e.preventDefault(); // 1. Wipe out history and state
 
-          // 1. Wipe out history and state
           this.state.history = [];
           this.state.currentStep = 0;
           this.state.persona = null;
           this.state.currentQuestionId = null;
           this.state.nextTargetId = null;
-          sessionStorage.removeItem('hsQuizHistory');
+          sessionStorage.removeItem('hsQuizHistory'); // 2. Reset the visual states of all questions
 
-          // 2. Reset the visual states of all questions
           document.querySelectorAll('.hs_quiz_assessment_set').forEach((el) => {
             el.classList.remove('is-answered');
 
             const qBlock = el.querySelector('[data-hs-block="question"]');
             const aBlock = el.querySelector('[data-hs-block="feedback"]');
             if (qBlock) qBlock.style.display = 'flex';
-            if (aBlock) aBlock.style.display = 'none';
+            if (aBlock) aBlock.style.display = 'none'; // Reset the "See the outcome" button back to "Next Question"
 
-            // Reset the "See the outcome" button back to "Next Question"
             const nextBtns = el.querySelectorAll('[data-hs-action="next-question"]');
             nextBtns.forEach((btn) => {
               if (btn.firstElementChild) {
@@ -4061,9 +4090,8 @@ strong {
                 btn.textContent = 'Next Question';
               }
             });
-          });
+          }); // 3. Route back to intro
 
-          // 3. Route back to intro
           this.setView('intro');
         }
       });
@@ -4071,10 +4099,10 @@ strong {
   };
 
   if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => QuizEngine.init());
-} else {
-  QuizEngine.init();
-}`
+    document.addEventListener('DOMContentLoaded', () => QuizEngine.init());
+  } else {
+    QuizEngine.init();
+  }`
     ];
 
     loadScriptsInOrder(externalScripts).then(function() {
