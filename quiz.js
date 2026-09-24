@@ -3651,9 +3651,9 @@ strong {
 
     var restoreListeners = patchReadyListeners();
 
-    var externalScripts = [
-  "https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6a9a9a6d2876b5a5a344308c",
-  "https://cdn.prod.website-files.com/6a9a9a6d2876b5a5a344308c/js/webflow.7fdf50bc.e09d923bc231ffd4.js"
+   var externalScripts = [
+  "https://cdn.statically.io/gh/hlabsdev1/bayer-quiz@main/jquery.js",
+  "https://cdn.statically.io/gh/hlabsdev1/bayer-quiz@main/webflow.js"
 ];
 
     var inlineScripts = [
