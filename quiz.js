@@ -4070,7 +4070,11 @@ strong {
     },
   };
 
-  document.addEventListener('DOMContentLoaded', () => QuizEngine.init());`
+  if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => QuizEngine.init());
+} else {
+  QuizEngine.init();
+}`
     ];
 
     loadScriptsInOrder(externalScripts).then(function() {
